@@ -6,5 +6,5 @@ var connect = require('connect'),
 
 var app = connect();
 
-app.use(serveStatic("./angularjs"));
+app.use(serveStatic("../angularjs06"));
 app.listen(5000);
