@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="exampleApp">
+<head>
+  <meta charset="UTF-8">
+  <title>Directives</title>
+  <link href="bootstrap.css" rel="stylesheet"/>
+  <link href="bootstrap-theme.css" rel="stylesheet"/>
+  <script src="angular.js"></script>
+  <script>
+    angular.module('exampleApp', [])
+        .controller("defaultCtrl", function ($scope) {
+          $scope.todos = [
+            {id: 100, action: "Get groceries", complte: false},
+            {id: 200, action: "Call plumber", complete: false},
+            {id: 300, action: "Buy running shoes", complete: true}
+          ]
+          $scope.myTodo = $scope.todos[2]; // red
+        });
+  </script>
+</head>
+<body>
+<div id="todoPanel" class="panel" ng-controller="defaultCtrl">
+  <form name="myForm" novalidate>
+    <div class="well">
+      <div class="form-group">
+        <labe>Select an Action:</labe>
+        <select ng-model="myTodo" ng-options="item.action for item in todos"></select>
+      </div>
+      <div class="well">
+        <p>Model value: {{myTodo}}</p>
+      </div>
+
+      <div class="form-group">
+        <labe>Select an Action:</labe>
+        <select ng-model="selectValue2" ng-options="item.id as item.action for item in todos">
+          <option value="">(Pick One)</option>
+        </select>
+      </div>
+      <div class="well">
+        <p>Model value: {{selectValue2}}</p>
+      </div>
+    </div>
+
+  </form>
+</div>
+</body>
+</html>

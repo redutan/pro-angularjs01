@@ -81,3 +81,28 @@ dpd -p 5500 sportsstore/app.dpd dashboard
 # `$scope`
 
 `$scope.$apply(expression)` : 정의된 표현식을 해석해서 처리 - `eval`과 비슷?
+
+# 유효성
+
+## input
+
+- `ng-change`
+- `ng-minlength`
+- `ng-maxlength`
+- `ng-pattern` : type=email|url|number 이면 자동 설정되므로 설정하지 말아야 한다.
+- `ng-requried`
+
+## checkbox
+
+- `ng-change` : 내용일 변할 때
+- `ng-true-value` : 체크될 때 값
+- `ng-false-value` : 체크 해제할 때 값
+
+# options
+
+- `ng-optoins` : option 적용
+
+*특이하게 grouping 기능이 있음*
+
+참고 : https://docs.angularjs.org/api/ng/directive/ngOptions
+
