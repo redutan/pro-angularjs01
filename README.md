@@ -59,4 +59,25 @@ dpd -p 5500 sportsstore/app.dpd dashboard
 
 ## `ng-include` VS `ng-switch`
 
-`ng-switch` :
+-`ng-switch` : 작은부분
+-`ng-include` : 큰부분
+
+## `ng-hide`, `ng-show` VS `ng-if`
+
+- `ng-hide`, `ng-show` : `display:none`
+- `ng-if` : No Element
+
+참고로 두 디렉티브는 transclusion을 사용하는데 같은 엘리먼트에 동시 지정하면 오류가 발생함
+일반적으로 array 항목 별로 제어나 분기가 필요하면 filter를 사용하는 것이 낫다.
+
+# 불리언 어트리뷰트 디렉티브
+
+- `ng-checked`
+- `ng-disabled`
+- `ng-open` : details의 open 속성
+- `ng-readonly`
+- `ng-selected`
+
+# `$scope`
+
+`$scope.$apply(expression)` : 정의된 표현식을 해석해서 처리 - `eval`과 비슷?
