@@ -29,3 +29,30 @@ dpd -p 5500 sportsstore/app.dpd dashboard
 *출력*
 
 `AngularJS uses {{ and }} characters for templates`
+
+## `ng-repeat`
+
+내장변수
+
+- `$index` : 행번(0 base)
+- `$first` : 현재 항목이 첫번째이면 true
+- `$middle` : 현재 항목이 처음이나 마지막이 아니면 true
+- `$last` : 현재 항목이 마지막이면 true
+- `$even` : 현재 항목이 짝수번째 이면 true
+- `$odd` : 현재 항목이 홀수번째 이면 true
+
+## `ng-include`
+
+빈엘리먼트 (바로 `/>` 닫기 태그 호출)로 사용하면 정상작동 되지 않는다. 아래처럼 항상 열기태그 닫기태그를 따로 지정해야한다.
+```html
+<!-- 오류 -->
+<ng-include src="'table.html'"/>
+<!-- 정상 -->
+<ng-include src="'table.html'"></ng-include>
+```
+
+속성
+
+- `src` : 로드할 콘텐츠 Url
+- `onload` : 로드 이벤트 표현식
+- `autoscroll` : 해당 뷰포트 스크롤 여부
