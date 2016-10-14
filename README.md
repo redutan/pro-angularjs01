@@ -56,3 +56,7 @@ dpd -p 5500 sportsstore/app.dpd dashboard
 - `src` : 로드할 콘텐츠 Url
 - `onload` : 로드 이벤트 표현식
 - `autoscroll` : 해당 뷰포트 스크롤 여부
+
+## `ng-include` VS `ng-switch`
+
+`ng-switch` :
