@@ -6,6 +6,7 @@
   "license": "Apache License 2.0",
   "dependencies": {
     "connect": "3.5.0",
-    "serve-static": "1.11.1"
+    "serve-static": "1.11.1",
+    "deployd": "*0.8.9"
   }
 }
