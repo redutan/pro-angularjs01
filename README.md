@@ -14,7 +14,7 @@ dpd -p 5500 sportsstore/app.dpd dashboard
 
 ## `ng-cloak`
 
-지정 엘리먼트 내 로딩되지 않은 인라인 데이터 바인딩(`{{}}`) 미노출
+문서가 처음 로드될 때 잠시 보일 수 있는 인라인 바인딩 표현식(`{{}}`)을 숨겨주는 CSS를 적용한다.
 
 ## `ng-non-bindable`
 
