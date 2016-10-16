@@ -1,7 +1,14 @@
 # pro-angularjs1
-pro angularjs example
+프로앵귤러JS 책 예제 풀이
+
+# 준비
+
+node 설치 : `brew install node`
 
 ```bash
+# 프로젝트폴더에서 (pakcage.json 존재)
+npm install
+# 6장 예제에서 필요함
 mkdir deployd
 cd deployd
 dpd create sportsstore
@@ -280,5 +287,99 @@ return function (scope, element, attrs) {
 - `isolatedScope()` : 현재 엘리먼트와 관련된 **고립스코프*가 있다면 반환
 - `scope()`
 - `inheritedData(key)` : 제이쿼리의 `data(key)`와 같은 작업을 하지만 지정한 키와 일치하는 값을 찾기위해 엘리먼트 계층구조를 순회한다는 점이 다름.
+
+# 고급 커스텀 디렉티브
+
+**컴파일방식**
+
+## 링크함수 VS 컴파일함수
+
+엄밀히 말해 compile 정의 속성에서 지정한 컴파일 함수는 DOM을 수정하는 데만 사용하고,
+링크함수는 와처를 생성하거나 이벤트 핸들러를 설정하는 작업에만 사용해야한다.
+
+> 하지만 필자는 개인적으로 프로젝트를 진행할 때 링크 함수에 모든 기능을 집어 넣는 편이다.
+
+*필자의 내용은 동의하기 힘듬. 그냥 그 위대로 각 상황별로 분기해서 사용하는 것이 좋다고 판단*
+
+
+## 디렉티브 정의객체 속성
+
+- `compile` : 컴파일 함수 지정
+- `controller` : 디렉티브를 위한 컨트롤러 함수 생성
+- `link` : 디렉티브를 위한 링크 함수 (실제 구현체)
+- `replace` : 템플릿 콘텐츠를 적용될 엘리먼트를 대처할지 여부
+- `require` : 컨트롤러에 대한 의존성 선언
+- `restrict` : 디렉티브 적용 방식 (**EA**CM)
+    - `E` : 엘리먼트
+    - `A` : 속성
+    - `C` : 클래스
+    - `M` : 주석
+ - `scope` : 디렉티브를 위한 스코프 또는 고립 스코프 생성
+- `template` : 뷰템플릿(html)
+- `templateUrl` : 뷰템플릿Url(html링크)
+- `transclude` : 디렉티브를 사용해 임의의 콘텐츠를 감쌀지 여부
+
+## 고립스코프
+
+```javascript
+.directive('scopeDemo', function () {
+  return {
+    template: function () {
+      return angular.element(document.querySelector("#scopeTemplate")).html();
+    },
+    scope: {} // 고립스코프
+  }
+})
+```
+
+### 고립스코프에서 속성 값을 통한 단방향 바인딩
+
+```javascript
+<script type="text/ng-template" id="scopeTemplate">
+  <div class="panel-body">
+    <p>Data Value: {{local}}</p>
+  </div>
+</script>
+...
+.directive('scopeDemo', function () {
+  return {
+    template: function () {
+      return angular.element(document.querySelector("#scopeTemplate")).html();
+    },
+    scope: {
+      local: "@nameprop"  // 디렉티브의 속성 nameprop -> 디렉티브 내 스코프 속성 local로 단방향 바인딩
+    }
+  }
+})
+...
+<div class="panel-body" scope-demo nameprop="{{data.name}}"></div>
+```
+
+**주의사항*
+
+> 고립스코프에 대한 단방향 바인딩은 항상 **문자열 값**으로 평가된다. 만일 배열에 접근해야 한다면 수정할 생각이 없더라도 양방향 바인딩을 사용해야한다.
+
+## 고립스코프에서 양방향 바인딩
+
+```javascript
+<script type="text/ng-template" id="scopeTemplate">
+  <div class="panel-body">
+    <p>Data Value: <input ng-model="local"/></p>
+  </div>
+</script>
+...
+.directive('scopeDemo', function () {
+  return {
+    template: function () {
+      return angular.element(document.querySelector("#scopeTemplate")).html();
+    },
+    scope: {
+      local: "=nameprop"  // 디렉티브의 속성 nameprop -> 디렉티브 내 스코프 속성 local로 단방향 바인딩
+    }
+  }
+})
+...
+<div class="panel-body" scope-demo nameprop="data.name"></div>
+```
 
 

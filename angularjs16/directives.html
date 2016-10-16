@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="exampleApp">
+<head>
+  <meta charset="UTF-8">
+  <title>Directives</title>
+  <link href="bootstrap.css" rel="stylesheet"/>
+  <link href="bootstrap-theme.css" rel="stylesheet"/>
+  <script src="angular.js"></script>
+  <script type="text/template" id="listTemplate">
+    <ul>
+      <li ng-repeat="item in data">{{item.price | currency}}</li>
+    </ul>
+  </script>
+  <script>
+    angular.module('exampleApp', [])
+        .directive('unorderedList', function () {
+          // $scope, 디렉티브가 적용된 html element, element의 속성들
+          return {
+            link: function (scope, element, attrs) {
+              scope.data = scope[attrs['unorderedList']];
+            },
+            restrict: 'A',
+            templateUrl: "tableTemplate.html",
+            replace: true // 해당 엘리먼트의 각종 속성을 사용할 수 있어서 유용함. (class="table table-striped")
+          }
+        })
+        .controller('defaultCtrl', function ($scope) {
+          $scope.products = [
+            {name: 'Apples', category: 'Fruit', price: 1.20, expiry: 10},
+            {name: 'Bananas', category: 'Fruit', price: 2.42, expiry: 7},
+            {name: 'Pears', category: 'Fruit', price: 2.02, expiry: 6}
+          ];
+        });
+  </script>
+</head>
+<body ng-controller="defaultCtrl">
+<div class="panel pane-default">
+  <div class="panel-heading">
+    <h3>Products</h3>
+  </div>
+  <div class="panel-body">
+    <div unordered-list="products" ng-repeat="count in [1, 2, 3]" class="table table-striped">
+      This is where the list will go
+    </div>
+  </div>
+</div>
+</body>
+</html>
