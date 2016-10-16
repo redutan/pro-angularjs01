@@ -129,3 +129,74 @@ AngularJS에서는 서비스를 사용해 스코프 사이의 통신을 중개�
 - `$watch(expression, handler)` : 표현식을 통해 참조한 값이 바뀔 때 이를 통보 받을 핸들러 등록
 - `$watchCollection(object, handler)` : 지정한 객체내 속성이 바뀔 때 이를 통바 받을 핸들러 등록
 
+# Filter
+
+## Basic
+
+- currency
+- date
+- json
+- number
+- uppercase
+- lowercase
+
+## Collection
+
+- limitTo : 갯수만큼 가져온다. 음수이면 뒤에서부터 갯수만큼 가져온다.
+  - `| limitTo:5`
+- filter : Collection 내 항목의 속성에 맞는 것만 필터링
+  - `| filter: {category: 'Fish'}`
+- orderBy : 정렬
+  - `| orderBy: 'price'`
+  - `| orderBy: '-price'` : 내림차순
+  - `| orderBy: [myCustomerSorter, '-price']` : 다중정렬
+
+## 필터체인
+`p in products | filter:selectItems | orderBy: [myCustomerSorter, '-price'] | limitTo:limitVal`
+
+## 커스텀필터
+
+### 일반
+
+```javascript
+// 일반 필터
+.filter('labelCase', function () {
+    return function (value, reverse) {
+        if (!angular.isString(value)) {
+            return value;
+        }
+        var intermediate = reverse ? value.toUpperCase() : value.toLowerCase();
+        return (reverse ? intermediate[0].toLowerCase() : intermediate[0].toUpperCase()) + intermediate.substr(1);
+    }
+})
+```
+
+### 컬렉션
+
+```javascript
+// 커스텀 컬랙션 필터
+.filter('skip', function () {
+    return function (data, count) {
+        if (!angular.isArray(data) || !angular.isNumber(count)) {
+            return data;
+        }
+        if (count > data.length || count < 1) {
+            return data;
+        } else {
+            return data.slice(count);
+        }
+    }
+})
+```
+
+### 복합
+```javascript
+// 기존 필터 확장 (skip + limitTo 복합)
+.filter('take', function ($filter) {
+    return function (data, skipCount, takeCount) {
+        var skippedData = $filter('skip')(data, skipCount);
+        return $filter('limitTo')(skippedData, takeCount);
+    }
+});
+```
+
