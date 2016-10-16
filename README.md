@@ -382,4 +382,28 @@ return function (scope, element, attrs) {
 <div class="panel-body" scope-demo nameprop="data.name"></div>
 ```
 
+## 고립스코프에서 함수 바인딩
+
+```javascript
+<script type="text/ng-template" id="scopeTemplate">
+  <div class="panel-body">
+    <p>Name: {{local}}, City: {{cityFn({nameVal: local})}}</p>
+  </div>
+</script>
+...
+.directive('scopeDemo', function () {
+  return {
+    template: function () {
+      return angular.element(document.querySelector("#scopeTemplate")).html();
+    },
+    scope: {
+      local: "=nameprop",
+      cityFn: "&city"   // 함수포인터
+    }
+  }
+})
+...
+<div class="panel-body" scope-demo nameprop="data.name" city="getCity(nameVal)"></div>
+```
+
 
