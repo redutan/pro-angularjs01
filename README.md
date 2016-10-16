@@ -98,11 +98,34 @@ dpd -p 5500 sportsstore/app.dpd dashboard
 - `ng-true-value` : 체크될 때 값
 - `ng-false-value` : 체크 해제할 때 값
 
-# options
+## select
 
 - `ng-optoins` : option 적용
+- `ng-model` : 선택한 값
 
 *특이하게 grouping 기능이 있음*
 
 참고 : https://docs.angularjs.org/api/ng/directive/ngOptions
+
+# Controller And Scope
+
+컨트롤러는 도메인 모델과 뷰를 연결해주는 역할
+
+컨트롤러는 'Scope'를 통해 뷰에게 데이터와 로직을 제공한다.
+
+*엄밀히 말하면 `$scope`는 서비스가 아니고 `rootScope` 라는 서비스에서 제공하는 객체다. 하지만 실제로도 `$scope`를 서비스처럼 사용하므로 서비스라고 해도 별 무리는 없다고 본다.*
+
+## controlelr 간 통신
+
+- `$broadcast (name, args)` : 현재 스코프에서 모든 자식 스코프로 이벤트를 아래로 전달
+- `$emit(name, args)` : 현재 스코프에서 루프 스코프까지 이벤트를 위로 전달
+- `$on('name', function (event, args) {...})` : 현재 스코프에서 특정 이벤트를 수신할 핸들러 등록
+
+AngularJS에서는 서비스를 사용해 스코프 사이의 통신을 중개하는 게 관례다.
+
+## 명시적 스코프 업데이트
+
+- `$apply(expression)` : 스코프에 변경사항을 적용 (함수 등록 가능)
+- `$watch(expression, handler)` : 표현식을 통해 참조한 값이 바뀔 때 이를 통보 받을 핸들러 등록
+- `$watchCollection(object, handler)` : 지정한 객체내 속성이 바뀔 때 이를 통바 받을 핸들러 등록
 
