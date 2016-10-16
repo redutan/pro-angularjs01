@@ -70,7 +70,7 @@ dpd -p 5500 sportsstore/app.dpd dashboard
 참고로 두 디렉티브는 transclusion을 사용하는데 같은 엘리먼트에 동시 지정하면 오류가 발생함
 일반적으로 array 항목 별로 제어나 분기가 필요하면 filter를 사용하는 것이 낫다.
 
-# 불리언 어트리뷰트 디렉티브
+## 불리언 어트리뷰트 디렉티브
 
 - `ng-checked`
 - `ng-disabled`
@@ -199,4 +199,86 @@ AngularJS에서는 서비스를 사용해 스코프 사이의 통신을 중개�
     }
 });
 ```
+
+# 커스텀 디렉티브
+
+방식
+
+- 링크함수 `return function (scope, element, attrs)`
+- 컴파일함수 : `return { link: ..., restrict: ..., template: ..., link: ..., ...}`
+
+속성으로 표현식을 받을려면 `scope.$eval` 을 사용하면된다.
+
+샘플은 http://redutan.github.com/pro-angularjs01/angularjs15/directive.html 참고
+
+# jqLite
+
+## Dom 탐색
+
+- `chidren()`
+- `eq(index)`
+- `find(tag)`
+- `next()`
+- `parent()`
+
+## Element 수정
+
+- `addClass(name)`
+- `attr(name)`, `attr(name, value)`
+- `css(name)`, `css(name, value)`
+- `hasClass(name)`
+- `prop(name)`, `prop(name, value)`
+- `removeAttr(name)`
+- `removeClass(name)`
+- `text()`, `text(value)`
+- `toggleClass(name)`
+- `val()`, `val(value)`
+
+*커스텀 디렉티브에서 jqLite 사용예시*
+```javascript
+return function (scope, element, attrs) {
+    var items = element.find("li");
+    for (var i = 0; i < items.length; i++) {
+        items.eq(i).css("font-weight", "normal");
+    }
+}
+```
+
+### `prop`, `attr`의 차이는?
+
+- attr : html 마크업 속성 : ex) `class`
+- prop : html 객체 속성 : ex) `className`
+
+## Element 생성, 제거
+
+- `angular.element(html)`
+- `after(elements)`
+- `append(elements)`
+- `clone()`
+- `prepend(elements)`
+- `remove()`
+- `replaceWith(elements)`
+- `wrap(elements)`
+
+## 이벤트 처리
+
+- `on(events, handler)`
+- `off(events, handler)`
+- `triggerHandler(event)` : jqLite 객체에서 엘리먼트에 등록된 특정 이벤트에 대한 핸들러를 모두 트리거 한다.
+
+## 기타
+
+- `data(key)`, `data(key, value)`
+- `removeData(key)`
+- `html()`
+- `ready(handler)` : Dom이 완전히 로드될 때 호출할 핸들러 함수를 등록한다.
+
+## jqLite를 통한 AngularJS 기능 접근
+
+- `controller()`, `controller(name)` : 해당 엘리먼트의 관련 콘트롤러를 반환
+- `injector()` : 현재 엘리먼트나 부모와 관련된 **주입기**를 반환
+- `isolatedScope()` : 현재 엘리먼트와 관련된 **고립스코프*가 있다면 반환
+- `scope()`
+- `inheritedData(key)` : 제이쿼리의 `data(key)`와 같은 작업을 하지만 지정한 키와 일치하는 값을 찾기위해 엘리먼트 계층구조를 순회한다는 점이 다름.
+
 
