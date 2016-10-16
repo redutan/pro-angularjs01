@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="exampleApp">
+<head>
+  <meta charset="UTF-8">
+  <title>Directives</title>
+  <link href="bootstrap.css" rel="stylesheet"/>
+  <link href="bootstrap-theme.css" rel="stylesheet"/>
+  <script src="angular.js"></script>
+  <script>
+    angular.module('exampleApp', [])
+        .controller("defaultCtrl", function ($scope) {
+          $scope.todos = [
+            {action: "Get groceries", complete: false},
+            {action: "Call plumber", complete: false},
+            {action: "Buy running shoes", complete: true},
+            {action: "Buy flowers", complete: false},
+            {action: "Call family", complete: false}
+          ];
+
+          $scope.viewFile = function () {
+            return $scope.showList ? "list.html" : "table.html";
+          };
+
+          $scope.reportChange = function () {
+            console.log("Displayed content: " + $scope.viewFile());
+          };
+        });
+  </script>
+  <style>
+    .odd {
+      background-color: lightcoral;
+    }
+
+    .event {
+      background-color: lavenderblush;
+    }
+  </style>
+</head>
+<body>
+<div id="todoPanel" class="panel" ng-controller="defaultCtrl">
+  <h3 class="panel-header">To Do List</h3>
+
+  <div class="well">
+    <div class="checkbox">
+      <label>
+        <input type="checkbox" ng-model="showList"/>
+        Use the list view
+      </label>
+    </div>
+  </div>
+
+  <!-- 빈엘리먼트 (바로 "/>" 닫기 태그 호출)로 사용하면 정상작동 되지 않는다. 아래처럼 항상 열기태그 닫기태그를 따로 지정해야한다. -->
+  <!-- <ng-include src="'table.html'"/> 이렇게 하면 오류 -->
+  <ng-include src="viewFile()" onload="reportChange()"></ng-include>
+  <!-- == <div ng-include="viewFile()" onload="reportChange()"></div> -->
+</div>
+</body>
+</html>

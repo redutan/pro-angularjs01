@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="exampleApp">
+<head>
+  <meta charset="UTF-8">
+  <title>Directive Scopes</title>
+  <link href="bootstrap.css" rel="stylesheet"/>
+  <link href="bootstrap-theme.css" rel="stylesheet"/>
+  <script src="angular.js"></script>
+  <script type="text/ng-template" id="template">
+    <div class="panel-body">
+      <h4>This is the panel</h4>
+    </div>
+    <div class="panel-body" ng-transclude>
+      It's transclude target
+      <!-- transclude가 활성화 되면서 directive가 선언된 엘리먼트 내 내용이 여기로 들어온다. -->
+      <!-- 실제내용 : The data value comes from the: {{dataSource}} -->
+    </div>
+  </script>
+  <script type="text/javascript">
+    angular.module('exampleApp', [])
+        .controller('defaultCtrl', function ($scope) {
+          $scope.products = [
+            {name: 'Apples', price: 1.20},
+            {name: 'Bananas', price: 2.42},
+            {name: 'Pears', price: 2.02}
+          ];
+
+          $scope.changeData = function () {
+            $scope.products.push({name: 'Cherries', price: 4.02})
+            for (var i = 0; i < $scope.products.length; i++) {
+              $scope.products[i].price++;
+            }
+          }
+        })
+        .directive('simpleRepeater', function () {
+          return {
+            scope: {
+              data: "=source",
+              propName: "@itemName"
+            },
+            transclude: 'element',
+            compile: function (element, attrs, transcludeFn) {
+              return function ($scope, $element, $attr) {
+                $scope.$watch('data.length', function () {
+                  var parent = $element.parent();
+                  parent.children().remove();
+                  for (var i = 0; i < $scope.data.length; i++) {
+                    var childScope = $scope.$new();
+                    childScope[$scope.propName] = $scope.data[i];
+                    transcludeFn(childScope, function (clone) {
+                      parent.append(clone);
+                    });
+                  }
+                });
+              }
+            }
+          }
+        });
+  </script>
+</head>
+<body>
+<div ng-controller="defaultCtrl" class="panel panel-body">
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th>Name</th>
+      <th>Price</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr simple-repeater source="products" item-name="item">
+      <td>{{item.name}}</td>
+      <td>{{item.price | currency}}</td>
+    </tr>
+    </tbody>
+  </table>
+  <button class="btn btn-default text" ng-click="changeData()">Change</button>
+</div>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="exampleApp">
+<head>
+  <meta charset="UTF-8">
+  <title>Directive Scopes</title>
+  <link href="bootstrap.css" rel="stylesheet"/>
+  <link href="bootstrap-theme.css" rel="stylesheet"/>
+  <script src="angular.js"></script>
+  <script type="text/ng-template" id="template">
+    <div class="panel-body">
+      <h4>This is the panel</h4>
+    </div>
+    <div class="panel-body" ng-transclude>
+      It's transclude target
+      <!-- transclude가 활성화 되면서 directive가 선언된 엘리먼트 내 내용이 여기로 들어온다. -->
+      <!-- 실제내용 : The data value comes from the: {{dataSource}} -->
+    </div>
+  </script>
+  <script type="text/javascript">
+    angular.module('exampleApp', [])
+        .directive('panel', function () {
+          return {
+            link: function (scope, element, attrs) {
+              scope.dataSource = 'directive';
+            },
+            restrict: 'E',
+            scope: false, // true 이면 controller 영역, false 이면 directive 영역
+            template: function () {
+              return angular.element(document.querySelector("#template")).html();
+            },
+            transclude: true  // 트랜스클루전 활성화. false로 비활성화 시키면 템플릿에 ng-transclude가 선언되어 있어서 오류 발생
+          }
+        })
+        .controller('defaultCtrl', function ($scope) {
+          $scope.dataSource = 'controller';
+        });
+  </script>
+</head>
+<body>
+<div ng-controller="defaultCtrl" class="panel panel-default">
+  <panel>
+    The data value comes from the: {{dataSource}}
+  </panel>
+</div>
+</body>
+</html>
