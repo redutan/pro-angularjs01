@@ -501,7 +501,53 @@ return function (scope, element, attrs) {
 })
 ```
 
-## 내장 서비스
+# 내장 서비스
+
+## `$interval`, `$timeout` 의 인자들
+
+- `fn` : 실행을 지연할 함수
+- `delay` : 함수 실행 시점까지의 지연시간 밀리초
+- `count` : 지연/실행 주기를 반복할 횟수(`$interval` 전용) 기본값은 0이며, 0 값은 무한반복
+- `invokeApply` : true(기본값)로 설정하면 `fn`이 `scope.$apply` 메서드 내에서 실행된다.
+
+## `$location`
+
+*Url*
+
+`http://mydomain.com/app.html#/cities/london?select=hodels#north`
+
+*변경가능부분*
+
+`/cities/london?select=hodels#north`
+
+*경로(path)*
+
+`cities/london`
+
+*검색어(search)*
+
+`select=hodel`
+
+*해시(hash)*
+
+`north`
+
+### `$location` 메서드
+
+- `absUrl()` : 현재 문서의 전체 URL을 반환한다.
+- `has()`, `hash(target)` : 해시를 조회하거나 설정한다.
+- `host()` : URL(mydomain.com)의 호스트네임 컴포넌트를 반환한다.
+- `path()`, `path(target)` : URL의 경로 컴포넌트를 가져오거나 설정한다.
+- `port()` : 포트번호를 반환한다.
+- `protocol()` : URL의 프로토콜 콤포넌트(http)를 반환한다.
+- `replace()` : 가장 최신 히스토리 항목으로 대처한다.
+- `search()`, `search(term, params)` : 검색어를 가져오거나 설정한다.
+- `url()`, `url(target` : 경로, 쿼리문자열, 해시를 한꺼번에 가져오거나 설정한다.
+
+### `$location` 이벤트
+
+- `$locationChangeStart` : URL이 변경되기 전에 호출된다. `Event` 객체를 가지고 `preventDefault` 메서드를 호출하면 URL이 변경되는 것을 막을 수 있다.
+- `$locationChangeSuccess` : URL이 변경된 후 호출된다.
 
 - `$anchorScroll` : 지정한 앵커로 브라우저 창을 스크롤한다.
 - `$animate` : 콘텐츠 화면전환(transition)에 애니메이션을 적용한다.
