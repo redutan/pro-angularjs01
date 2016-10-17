@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="exampleApp">
+<head>
+  <meta charset="UTF-8">
+  <title>CustomForms</title>
+  <link href="bootstrap.css" rel="stylesheet"/>
+  <link href="bootstrap-theme.css" rel="stylesheet"/>
+  <style>
+    *.error {
+      color: red;
+      font-weight: bold;
+    }
+  </style>
+  <script src="angular.js"></script>
+  <script type="text/ng-template" id="triTemplate">
+    <div class="well">
+      <div class="btn-group">
+        <button class="btn btn-default">Yes</button>
+        <button class="btn btn-default">No</button>
+        <button class="btn btn-default">Not Sure</button>
+        <span class="error" ng-show="myForm.decision.$error.confidence">
+          You need to be sure
+        </span>
+      </div>
+    </div>
+  </script>
+  <script>
+    angular.module('exampleApp', [])
+        .controller('defaultCtrl', function ($scope) {
+          $scope.dataValue = 'Not Sure';
+        })
+        .directive('triButton', function () {
+          return {
+            restrict: 'E',
+            replace: true,
+            require: "ngModel",
+            template: document.querySelector('#triTemplate').outerText,
+            link: function (scope, element, attrs, ctrl) {
+
+              var validateParser = function (value) {
+                var valid = (value == 'Yes' || value == 'No');
+                ctrl.$setValidity('confidence', valid);
+                return valid ? value : undefined;
+              }
+
+              ctrl.$parsers.push(validateParser);
+
+              ctrl.$formatters.push(function (value) {
+                return value == 'Huh?' ? 'Not Sure' : value;
+              })
+
+              element.on('click', function (event) {
+                setSelected(event.target.innerText);
+                // 굳이 여기에서 왜 scope.$apply를 사용하는지 이해가 안됨. 그냥 ctrl.$serView만 호출해도 되는데
+                scope.$apply(function () {
+                  ctrl.$setViewValue(event.target.innerText);
+                });
+              });
+
+              var setSelected = function (value) {
+                var buttons = element.find('button');
+                buttons.removeClass('btn-primary');
+                for (var i = 0; i < buttons.length; i++) {
+                  if (buttons.eq(i).text() == value) {
+                    buttons.eq(i).addClass('btn-primary')
+                  }
+                }
+              }
+              ctrl.$render = function () {  // ctrl = ngModel 내 컨트롤러. ng-model이 바뀌면 호출됨
+                validateParser(ctrl.$viewValue);  // 초기 유효성 검증 (다소 편번)
+                setSelected(scope.dataValue || 'Not Sure');
+              }
+            }
+          }
+        });
+  </script>
+</head>
+<body ng-controller="defaultCtrl">
+<form name="myForm" novalidate>
+  <div>
+    <tri-button name="decision" ng-model="dataValue"/>
+  </div>
+</form>
+<div class="well">
+  Value:
+  <select ng-model="dataValue">
+    <option>Yes</option>
+    <option>No</option>
+    <option>Not Sure</option>
+    <option>Huh?</option>
+  </select>
+</div>
+</body>
+</html>

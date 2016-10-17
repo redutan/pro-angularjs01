@@ -87,7 +87,9 @@ dpd -p 5500 sportsstore/app.dpd dashboard
 
 # `$scope`
 
-`$scope.$apply(expression)` : 정의된 표현식을 해석해서 처리 - `eval`과 비슷?
+`$scope.$apply(expression)` : 정의된 표현식을 해석해서 처리 (함수가능) - `eval`과 비슷?
+
+- 데이터 모델로 업데이트 정보를 전달하는데 사용
 
 # 유효성
 
@@ -420,4 +422,23 @@ return function (scope, element, attrs) {
 - `^` : 디렉티브가 적용된 엘리먼트의 부모 엘리먼트에서 다른 디렉티브를 찾는다.
 - `?` : 디렉티브를 찾을 수 없더라도 에러를 보고하지 않는다. - 이 접두어는 주의해야함
 
+## ngModel 컨트롤러
 
+**기본속성**
+
+- `$render` : 데이터 바인딩 값이 변할 때 UI 호출. 주로 커스텀 디렉티브에서 오버라이드 한다.
+- `$setViewValue(value)` : 데이터 바인딩 값을 업데이트 한다.
+- `$viewValue` : 디렉티브를 통해 표시할 포매팅된 값을 반환
+- `$modelValue` : 스코프로부터 포매팅되지 않은 값을 반환
+- `$formatters` : `$modelValue` -> `$viewValue`로 포매팅하는 함수 배열
+
+**유효성 검증 속성**
+
+- `$setPristine()` : 컨트롤러 검증 유효성을 초기로 되돌려서 유효성 검증이 안되게 함
+- `$isEmpty()` : 빈 문자열, null, undefined 값을 찾기 위해 사용
+- `$parsers` : 유효성체크 함수 배열
+- `$pristine` : 사용자가 컨트롤을 수정하지 않은 경우 true
+- `$dirty` : 사용자가 컨트롤을 수정한 경우 true. `$pristine != $dirty`
+- `$setValidity(name, valid)` : name의 유효성여부 설정
+- `$valid` : 모델이 유효한가?
+- `$invalid` : 모델이 유효하지 않은가?. `$valid != $invalid`
