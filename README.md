@@ -442,3 +442,56 @@ return function (scope, element, attrs) {
 - `$setValidity(name, valid)` : name의 유효성여부 설정
 - `$valid` : 모델이 유효한가?
 - `$invalid` : 모델이 유효하지 않은가?. `$valid != $invalid`
+
+# Service
+
+서비스는 애플리케이션에서 재사용하려는 기능을 캡슐화하려고 한다. 이는 MVC 패턴에 부합되지 않을 때 사용한다.
+서비스는 주로 횡단 관심사를 구현하는 데 사용한다.
+
+> **횡단관심사**
+> - 하나 이상의 컴포넌트에 의해 영향을 받거나 하나 이상의 콤포넌트에 영향을 주는 공통 기능.
+> - 전형적인 예로 로깅, 보안, 네트워킹
+> - 이들 기능은 모델에 속하지 않으며, 컨트롤러나 뷰에도 속하지 않는다.
+
+**사용이유**
+
+서비스는 애플리케이션 전반에서 **재사용**할 수 있게 기능을 패키징한다.
+모듈은 여러 애플리케이션에서 기능을 재사용하기 쉽게끔 기능을 패키징한다.
+
+**시점**
+
+서비스는 기능이 다른 MVC 컴포넌트에 집어넣기에 적합하지 않으며, 횡단 관심사에 해당할 때 구현한다.
+모듈은 여러 애플리케이션에서 기능을 재사용하고 싶을 때 구현한다.
+
+## Module
+
+**맴버**
+
+- `name` : 모듈의 이름
+- `animation(name, factory)` : 애니메이션 기능 지원
+- `config(callback)` : 로드 시점에 모듈을 설정하는 데 사용할 함수 등록
+- `constant(key, value)` : 상수 반환 서비스
+- `controller(name, constructor)` : 컨트롤러 생성
+- `directive(name, factory)` : 디렉티브 생성
+- `factory(name, provider)` : 서비스 생성
+- `filter(name, factory)` : 필터 생성
+- `provicer(name, type)` : 프로바이더 기반 서비스 생성
+- `run(callback)` : 모든 모듈을 로드 및 설정할 수 호출할 함수를 등록. after `config`
+- `service(name, constructor)` : 서비스 생성
+- `value(name, value)` : 값 반환 서비스
+
+**AngularJS 내장서비스**
+
+- `$log` : 로깅서비스
+
+## `Module.factory`
+
+객체 정의를 통한 생성
+
+## `Module.service`
+
+생성자 정의를 통한 생성
+
+## `Module.provider`
+
+프로바이더를 통해 설정 가능한 서비스 생성
