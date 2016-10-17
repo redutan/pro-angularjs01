@@ -480,13 +480,10 @@ return function (scope, element, attrs) {
 - `service(name, constructor)` : 서비스 생성
 - `value(name, value)` : 값 반환 서비스
 
-**AngularJS 내장서비스**
-
-- `$log` : 로깅서비스
-
 ## `Module.factory`
 
-객체 정의를 통한 생성
+- 객체 정의를 통한 생성
+- 싱글턴
 
 ## `Module.service`
 
@@ -494,4 +491,42 @@ return function (scope, element, attrs) {
 
 ## `Module.provider`
 
-프로바이더를 통해 설정 가능한 서비스 생성
+- 프로바이더를 통해 설정 가능한 서비스 생성
+- 서비스에 사용할 수 있는 기능 추가 가능
+
+*설정예시*
+```javascript
+.config(function (logServiceProvider) {
+  logServiceProvider.debugEnabled(true).messageCounterEnabled(false);
+})
+```
+
+## 내장 서비스
+
+- `$anchorScroll` : 지정한 앵커로 브라우저 창을 스크롤한다.
+- `$animate` : 콘텐츠 화면전환(transition)에 애니메이션을 적용한다.
+- `$compile` : HTML 코드 조각을 처리해 콘텐츠를 생성하는 데 사용할 수 있는 함수를 생성한다.
+- `$controller` : 컨트롤러를 인스턴스화 하는 `$injector` 서비스를 감싼 래퍼
+- `$document` : DOM `window.document` 객체가 들어있는 jqLite 객체 제공
+- `$exceptionHandler` : 애플리케이션 예외를 처리한다.
+- `$filter` : 필터를 접근할 수 있게 해준다.
+- `$http` : Ajax 요청을 생성하고 관리한다.
+- `$injector` : AngularJS 컴포넌트 인스턴스를 생성한다.
+- `$interpolate` : 바인딩 표현식이 들어 있는 문자열을 처리해 콘텐츠를 생성하는 데 사용할 수 있는 함수를 생성
+- `$interval` : `window.setInterval` 함수를 감싼 고급 래퍼
+- `$location` : 브라우저 `location` 객체를 감싼 래퍼
+- `$log` : 전역 `console` 객체를 감싼 래퍼
+- `$parse` : 표현식을 처리해 콘텐츠를 생성하는 데 사용할 수 있는 함수를 생성
+- `$provide` : Module에서 노출하는 메소드를 대부분 구현
+- `$q` : 지연 객체/프로미스를 제공한다.
+- `$resource` : RESTful API 지원 및 연동
+- `$rootElement` : DOM 내 루트엘리먼트에 접근하게 해준다.
+- `$rootScope` : 스코프 계층 최상단에 접근하게 해준다.
+- `$route` : 브라우저의 URL 경로를 기반으로 뷰 콘텐츠 변경 기능 지원
+- `$routeParams` : URL 라우트에 대한 정보를 제공
+- `$sanitize` : 위험한 HTML 문자를 안전한 문자로 대체한다
+- `$sce` : HTML 문자열에서 위험한 엘리먼트 및 어트리뷰트를 제거해서 보여주기 적합한 콘텐츠만 남긴다.
+- `$swipe` : 스와이프 제스처를 인식한다.
+- `$timeout` : `window.setTimeout` 함수를 감싼 고급 래퍼
+- `$window` : DOM `window` 객체에 대한 참조를 제공한다.
+

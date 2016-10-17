@@ -10,6 +10,10 @@
   <script src="services.js"></script>
   <script>
     angular.module('exampleApp', ['customDirectives', 'customServices'])
+      // provider service 사용 시 환경설정
+        .config(function (logServiceProvider) {
+          logServiceProvider.debugEnabled(true).messageCounterEnabled(false);
+        })
       // logService 라는 주입받는 인자명이 서비스명과 일치해야지 정상적으로 사용된다.
         .controller('defaultCtrl', function ($scope, logService) {
           $scope.data = {
