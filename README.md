@@ -124,7 +124,7 @@ dpd -p 5500 sportsstore/app.dpd dashboard
 
 *엄밀히 말하면 `$scope`는 서비스가 아니고 `rootScope` 라는 서비스에서 제공하는 객체다. 하지만 실제로도 `$scope`를 서비스처럼 사용하므로 서비스라고 해도 별 무리는 없다고 본다.*
 
-## controlelr 간 통신
+## controller 간 통신
 
 - `$broadcast (name, args)` : 현재 스코프에서 모든 자식 스코프로 이벤트를 아래로 전달
 - `$emit(name, args)` : 현재 스코프에서 루프 스코프까지 이벤트를 위로 전달
