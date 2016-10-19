@@ -571,12 +571,12 @@ var result = expressionFn(scope);
 
 보간설정도 바꿀 수 있음 by `$interpolateProvider`
 
-- `startSymbol(symbol)` : `{{`를 대처하는 시작문자 설정
-- `endSymbol(symbol)` : `}}`를 대처하는 종료문자 설정
+- `startSymbol(symbol)` : `{{` 를 대처하는 시작문자 설정
+- `endSymbol(symbol)` : `}}` 를 대처하는 종료문자 설정
 
 ```javascript
 var interpolationFn =
-    $interpolate('The total is: {{amount | currency}} (including tax)");
+    $interpolate('The total is: {{amount | currency}} (including tax)');
 ...
 element.text(interpolationFn(scope));
 ```
