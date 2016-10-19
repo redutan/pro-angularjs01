@@ -549,6 +549,55 @@ return function (scope, element, attrs) {
 - `$locationChangeStart` : URL이 변경되기 전에 호출된다. `Event` 객체를 가지고 `preventDefault` 메서드를 호출하면 URL이 변경되는 것을 막을 수 있다.
 - `$locationChangeSuccess` : URL이 변경된 후 호출된다.
 
+## 표현식 함수
+
+### `$parse`
+
+단순한 표현식만 evaluate 가능
+
+`$parse` 서비스를 주입받아야함
+
+```javascript
+// scope.expr = 'price | currency';
+var expressionFn = $parse(scope.expr);
+var result = expressionFn(scope);
+```
+
+### `$interpolate`
+
+보간식(`{{}}`) 내 표현식과 일반문자열을 같이 표현 가능
+
+`$parse` 서비스를 주입받아야함
+
+보간설정도 바꿀 수 있음 by `$interpolateProvider`
+
+- `startSymbol(symbol)` : `{{`를 대처하는 시작문자 설정
+- `endSymbol(symbol)` : `}}`를 대처하는 종료문자 설정
+
+```javascript
+var interpolationFn =
+    $interpolate('The total is: {{amount | currency}} (including tax)");
+...
+element.text(interpolationFn(scope));
+```
+
+### `$compile`
+
+위 `$interpolate` 에다가 html 내 디렉티브까지 표현 가능
+
+```javascript
+// 내용에 html, 디렉티브, 보간식 이 모두 포함되어 있다.
+var content = '<ul><li ng-repeat="city in cities">{{city}}</li></ul>';
+var listElem = angular.element(content);
+// 컴파일 함수를 선언, $compile(listElem)(scope) 로 선언과 동시 실행 가능
+var compileFn = $compile(listElem);
+// 컴파일함수를 실행하고 나면 listElem 이 표현 후 형태로 변경됨
+compileFn(scope);
+element.append(listElem);
+```
+
+# 기타 내장 서비스
+
 - `$anchorScroll` : 지정한 앵커로 브라우저 창을 스크롤한다.
 - `$animate` : 콘텐츠 화면전환(transition)에 애니메이션을 적용한다.
 - `$compile` : HTML 코드 조각을 처리해 콘텐츠를 생성하는 데 사용할 수 있는 함수를 생성한다.
