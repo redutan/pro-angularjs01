@@ -596,6 +596,190 @@ compileFn(scope);
 element.append(listElem);
 ```
 
+# Ajax
+
+## `$http` 제공 메서드
+
+- `get(url, config)`
+- `post(url, data, config)`
+- `delete(url, config)`
+- `put(url, data, config)`
+- `head(url, config)`
+- `jsonp(url, config)`
+
+## `$http` 프로미스
+
+- `success(fn)`
+- `error(fn)`
+- `then(successFn, errorFn)`
+
+**then 메서드에서 넘기는 객체 속성**
+
+- `data` : 데이터
+- `status` : http 상태코드
+- `headers` : 응답헤더
+- `config` : 설정 객체
+
+## `$http` config
+
+- `data` : 전송 body
+- `headers` : 요청 헤더
+- `method` : http 메서드
+- `params` : 전송 query파라메터
+- `timeout`
+- `transformRequest` : 요청 전 조작
+- `transformResponse` : 응답 후 조작
+- `url` : 요청주소
+- `withCredentials` : 인증포함
+- `xsrfHeaderNamexsrf`, `CookieName`
+
+## `$httpProvider` 속성
+
+- `defaults.headers.common` : 모든 요청의 기본 헤더 정의
+- `defaults.headers.post` : POST 요청 기본 헤더 정의
+- `defaults.headers.put` : PUT 요청 기본 헤더 정의
+- `defaults.transformResponse` : 모든 응답에 적용할 변형함수 배열
+- `defaults.transformRequest` : 모든 요청에 적용할 변형함수 배열
+- `interceoptors` : 인터셉터 팩토리 함수 배열
+- `withCredentials` : 모든 요청 인증 설정
+
+## `$q` 메서드 (프로미스)
+
+- `all(promises)` : 지정한 배열 내 모든 프로미스가 해결되거나 이 중 하나다로 거부된 경우 해결된 프로미스를 반환
+- `defer()` : 지연 객체 생성.
+- `reject(reason)` : 항상 거부되는 프로미스 반환
+- `when(value)` : 항상 해결되는 프로미스를 사용해 값을 감싼다.
+
+### 지연객체에서 정의하는 맴버. `defer()`를 통해서 생성
+
+- `resolve(result)` : 지연활동이 지정한 값을 가지고 완료됐음을 알린다.
+- `reject(reason)` : 지연활동이 실패했거나 지정한 이유로 인해 완료되지 못했음을 알린다.
+- `notify(result)` : 지연활동으로부터 중간 결과를 제공한다.
+- `promise` : 다른 메서드로부터 알림을 수신할 수 있는 프로미스 객체를 반환한다.
+
+## 인터셉터 속성
+
+- `request`
+- `requestError`
+- `response`
+- `responseError`
+
+# REST
+
+`$resource` 서비스 설정
+
+```javascript
+$scope.productsResource = $resource(baseUrl + ":id", {id: "@id"});
+```
+= `http://localhost:5500/products/:id`
+
+**`$resource` 기본행동**
+
+| 메서드 | HttpMethod | URL | 설명 |
+|-------|-----------|-----|------|
+| `delete(params, product)` | DELETE | `/products/<id>` | 지정한 객체 제거 |
+| `get(id)` | GET | `/products/<id>` | 1건 조회 |
+| `query()` | GET | `/products` | 모든 목록 조회 |
+| `remove(params, product)` | DELETE | `/products/<id>` | 지정한 객체 제거 |
+| `save(product)` | POST | `/products/<id>` | 지정한 객체 수정 |
+
+## 조회
+
+```javascript
+$scope.listProducts = function () {
+    $scope.products = $scope.productsResource.query();
+};
+```
+**최초 호출 시에는 빈배열을 생성하고 요청이 완료되면 내용이 채워진다.**
+
+### `$promise`를 이용하여 직접반응
+
+```javascript
+$scope.listProducts = function () {
+    $scope.products = $scope.productsResource.query();
+    $scope.products.$promise.then(function (data) {
+        // 추가 작업 수행
+    });
+};
+```
+
+## 수정
+
+**`$resource` 지원하는 메서드**
+
+`$delete()` : 서버에서 객체를 삭제 = `$remove()`
+`$get()` : 서버로부터 객체를 가져와 갱신. 커밋하지 않은 로컬 변경 사항을 모두 제거한다.
+`$remove()` : 서버에서 객체를 삭제 = `$delete()`
+`$save()` : 객체를 서버에 저장
+
+```javascript
+$scope.updateProduct = function (product) {
+    product.$save();
+    $scope.displayMode = 'list';
+};
+```
+
+```javascript
+$scope.cancelEdit = function () {
+    if ($scope.currentProduct && $scope.currentProduct.$get) {
+        $scope.currentProduct.$get();
+    }
+    $scope.currentProduct = {};
+    $scope.displayMode = 'list';
+};
+```
+*취소를 호출해서 서버에서 다시 데이터를 가져옴 - 즉, 변경사항을 휘발시키고 서버 기준으로 초기화*
+
+```javascript
+$scope.deleteProduct = function (product) {
+    product.$delete().then(function () {
+        $scope.products.splice($scope.products.indexOf(product), 1);
+    })
+    $scope.displayMode = 'list';
+};
+```
+## 새 객체 생성
+
+```javascript
+$scope.createProduct = function (product) {
+    new $scope.productsResource(product).$save().then(function (newProduct) {
+        $scope.products.push(newProduct);
+        $scope.displayMode = 'list';
+    });
+};
+```
+
+## Action 설정
+
+`$get, $save, $query, $remove, $delete` 과 같이 `$`가 달린 메서드를 액션이라고 부른다.
+
+```javascript
+$scope.productsResource = $resource(baseUrl + ":id", {id: "@id"}),
+    { create: {method: 'POST'}, save: {method: 'PUT'}});
+```
+*Action 설정 수정*
+
+**Action 설정 속성**
+
+- `method`
+- `params`
+- `url`
+- `isArray` : 응답이 배열이라고 지정한다. 기본값은 false
+
+`transformRequest, transformResponse, cache, timeout, withCredentials, responseType, interceptor`
+속성들 사용 가능
+
+```javascript
+$scope.createProduct = function (product) {
+    // $save -> $create
+    new $scope.productsResource(product).$create().then(function (newProduct) {
+        $scope.products.push(newProduct);
+        $scope.displayMode = 'list';
+    });
+};
+```
+*커스텀 속성 사용예시*
+
 # 기타 내장 서비스
 
 - `$anchorScroll` : 지정한 앵커로 브라우저 창을 스크롤한다.
