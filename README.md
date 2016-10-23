@@ -809,3 +809,57 @@ $scope.createProduct = function (product) {
 - `$timeout` : `window.setTimeout` 함수를 감싼 고급 래퍼
 - `$window` : DOM `window` 객체에 대한 참조를 제공한다.
 
+# 22. 뷰를 위한 서비스
+
+## URL 라우팅
+
+**어플리케이션 내 아무곳에서나 애플리케이션 콘텐츠를 제어할 수 있게끔 컨트롤러부터 뷰 선택 로직을 분리해야한다.**
+
+*기존 코드 기존 `$scope.displayMode` 와 같은 전역 변수를 제거해야함*
+
+ngRoute 모듈이 요구됨
+
+**`$route` 서비스에서 정의하는 메서드 및 속성
+
+- `current` : 활성 라우트에 대한 정보를 제공하는 객체 `$scope`, `$template` 속성도 들어있다.
+- `reload()` : URL이 변하지 않았더라도 뷰를 재로드 한다.
+- `routes` : `$routeProvider`를 통해 정의된 라우트 컬렉션을 반환한다.
+
+**`$route` 서비스에서 정의하는 이벤트
+
+- `$routeChangestart` : 라우트가 변경되기 전
+- `$routeChangeSuccess` : 라우트가 변경된 후
+- `$routeUpdate` : 라우트가 갱신될 때. `reloadOnSearch` 설정 속성과 밀접한 연관
+- `$routeChangeError` : 라우트를 변경할 수 없을 때
+
+*라우트 파라미터를 가져오는 예제*
+
+```javascript
+$scope.$on('$routeChangeSuccess', function () {
+    if ($location.path().indexOf('/edit/') != 0) {
+        var id = $routeParams['id'];
+        for (var i = 0; i < $scope.products.length; i++) {
+            $scope.currentProduct = $scope.products[i];
+            break;
+        }
+    }
+});
+```
+
+## 라우트 설정
+
+**라우트 설정 옵션**
+
+- `controller` : 라우트에 표시하는 뷰와 관련한 컨트롤러의 이름을 지정 - 라우트와 컨트롤러 연계
+- `controllerAs` : 컨트롤러 별칭(Alias)
+- `template` : 뷰 콘텐츠
+- `templateUrl` : 뷰 콘텐츠 URL
+- `resolve` : 컨트롤러에 필요한 의존성Set 지정 - 라우트와 의존성 추가
+- `redirectTo`
+- `reloadOnSearch` : true(기본값)로 설정하면 `$location` `search` 및 `hash` 메서드에서 반환값이 바뀔 때만 라우트가 재로드된다.
+- `caseInsensitiveMatch` : true(기본값)로 설정하면 대소문자 구분하지 않고 라우팅을 수행한다.
+
+
+
+
+
