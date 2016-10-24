@@ -819,13 +819,13 @@ $scope.createProduct = function (product) {
 
 ngRoute 모듈이 요구됨
 
-**`$route` 서비스에서 정의하는 메서드 및 속성
+**`$route` 서비스에서 정의하는 메서드 및 속성**
 
 - `current` : 활성 라우트에 대한 정보를 제공하는 객체 `$scope`, `$template` 속성도 들어있다.
 - `reload()` : URL이 변하지 않았더라도 뷰를 재로드 한다.
 - `routes` : `$routeProvider`를 통해 정의된 라우트 컬렉션을 반환한다.
 
-**`$route` 서비스에서 정의하는 이벤트
+**`$route` 서비스에서 정의하는 이벤트**
 
 - `$routeChangestart` : 라우트가 변경되기 전
 - `$routeChangeSuccess` : 라우트가 변경된 후
@@ -942,7 +942,7 @@ $scope.handleClick = function () {
 };
 ```
 
-*좀 더 간단한 `$injector.invoke` 로 실행하기
+*좀 더 간단한 `$injector.invoke` 로 실행하기*
 
 ```javascript
 var logClick = function ($log, $exceptionHandler, message) {
