@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="exampleApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Components</title>
+    <link href="/common/bootstrap.css" rel="stylesheet"/>
+    <link href="/common/bootstrap-theme.css" rel="stylesheet"/>
+    <script src="/common/angular.js"></script>
+    <script>
+        angular.module('exampleApp', [])
+            .config(function($provide) {
+                $provide.decorator('$log', function ($delegate) {
+                    $delegate.originalLog = $delegate.log;
+                    $delegate.log = function (message) {
+                        $delegate.originalLog('Decorated: ' + message);
+                    }
+                    // 꼭 변환된 원본을 반환해야한다.
+                    return $delegate;
+                });
+            })
+            .controller('defaultCtrl', function ($scope, $log) {
+                $scope.handleClick = function () {
+                    $log.log('Button Clicked');
+                };
+            });
+    </script>
+</head>
+<body ng-controller="defaultCtrl">
+    <div class="well">
+        <button class="btn btn-primary" ng-click="handleClick()">Click Me!</button>
+    </div>
+</body>
+</html>

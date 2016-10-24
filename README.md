@@ -859,6 +859,82 @@ $scope.$on('$routeChangeSuccess', function () {
 - `reloadOnSearch` : true(기본값)로 설정하면 `$location` `search` 및 `hash` 메서드에서 반환값이 바뀔 때만 라우트가 재로드된다.
 - `caseInsensitiveMatch` : true(기본값)로 설정하면 대소문자 구분하지 않고 라우팅을 수행한다.
 
+# 주입
+
+## Decorator
+
+```javascript
+$provide.decorator('$log', function ($delegate) {
+    $delegate.originalLog = $delegate.log;
+    $delegate.log = function (message) {
+        $delegate.originalLog('Decorated: ' + message);
+    }
+    // 꼭 변환된 원본을 반환해야한다.
+    return $delegate;
+});
+```
+
+## Inject
+
+**`$injector` 서비스가 정의하는 메서드**
+
+- `annotate(fn)` : 지정한 함수에 대한 인자를 가져온다. 서비스에 해당하지 않는 함수도 포함한다.
+- `get(name)` : 지정한 서비스명에 대한 서비스 객체를 가져온다.
+- `has(name)` : 지정한 이름과 관련해 서비스가 존재하는지 여부를 반환한다.
+- `invode(fn, self, locals)` : this에 지정한 값과 비서비스 인자 값을 사용해 지정 함수를 호출한다.
+
+> `$inject` 서비스는 AngularJS 라이브러리의 핵심 서비스로, 이 서비스를 직접 활용해야 하는 경우는 거의 없다.
+하지만 이 서비스를 이해하고 나면 AngularJS가 어떻게 동작하고, AngularJS를 어떻게 커스터마이징해야 하는지 이해하는 데 도움이 된다.
+
+*의존성 인자 가져오기*
+
+```javascript
+var logClick = function ($log, $exceptionHandler, message) {
+...
+var deps = $injector.annotate(logClick);
+for (var i = 0; i < deps.length; i++) {
+    console.log('Dependency: ' + deps[i]);
+}
+/* 출력결과
+Dependency: $log
+Dependency: $exceptionHandler
+Dependency: message
+*/
+```
+
+*의존성 인자를 바탕으로 주입 후 실행하기*
+
+```javascript
+var logClick = function ($log, $exceptionHandler, message) {
+...
+// logClick 메서드 호출
+$scope.handleClick = function () {
+    var deps = $injector.annotate(logClick);
+    var args = [];
+    for (var i = 0; i < deps.length; i++) {
+        if ($injector.has(deps[i])) {
+            // 서비스 의존성 인자 가져오기
+            args.push($injector.get(deps[i]));
+        } else if (deps[i] == 'message') {
+            args.push('Button Clicked');
+        }
+    }
+    // apply는 js 기본 제공 함수임.
+    logClick.apply(null, args);
+};
+```
+
+*좀 더 간단한 `$injector.invoke` 로 실행하기
+
+```javascript
+var logClick = function ($log, $exceptionHandler, message) {
+...
+// logClick 메서드 호출
+$scope.handleClick = function () {
+   var localVars = {message: 'Button Clicked' };
+   $injector.invoke(logClick, null, localVars);
+};
+```
 
 
 

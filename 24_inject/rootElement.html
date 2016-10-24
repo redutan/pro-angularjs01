@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="exampleApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Components</title>
+    <link href="/common/bootstrap.css" rel="stylesheet"/>
+    <link href="/common/bootstrap-theme.css" rel="stylesheet"/>
+    <script src="/common/angular.js"></script>
+    <script>
+        angular.module('exampleApp', [])
+            .controller('defaultCtrl', function ($scope, $rootElement) {
+                var counter = 0;
+
+                    var logClick = function ($log, $exceptionHandler, message) {
+                    if (counter == 0) {
+                        $log.log(message);
+                        counter++;
+                    } else {
+                        $exceptionHandler('Already clicked');
+                    }
+                }
+
+                // $rootElement 로 injector 조회
+                $scope.handleClick = function () {
+                    var localVars = {message: 'Button Clicked' };
+                    // $로 시작하는 서비스 의존성을 자동으로 주입처리 해준다. 단 기본함수인자(여기서는 message)는 입력해야한다.
+                    $rootElement.injector().invoke(logClick, null, localVars);
+                };
+            });
+    </script>
+</head>
+<body ng-controller="defaultCtrl">
+    <div class="well">
+        <button class="btn btn-primary" ng-click="handleClick()">Click Me!</button>
+    </div>
+</body>
+</html>
